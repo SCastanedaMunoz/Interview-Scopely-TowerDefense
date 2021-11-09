@@ -3,7 +3,7 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace TowerDefense
+namespace TowerDefense.Camera
 {
     [RequireComponent(typeof(CinemachineInputProvider))]
     [RequireComponent(typeof(CinemachineVirtualCamera))]
