@@ -28,9 +28,8 @@ namespace TowerDefense.Spawers
             spawnerData.spawnWaves.ForEach(x => TotalRate += x.spawnRate);
             SelectCreepWave();
         }
-
-
-        private void SelectCreepWave() {
+        
+        private async void SelectCreepWave() {
 
             var randomRate = Random.Range(0, TotalRate);
             var currentRate = 0f;
@@ -49,13 +48,16 @@ namespace TowerDefense.Spawers
             
             if (selectedWave == null)
                 return;
+            
+            
+            Debug.Log($"Attempting to Spawn: {selectedWave.name}");
 
             for (int i = 0; i < selectedWave.spawnCount; i++)
             {
                 // todo - account for scenarios with 1 creep type or multiple creep types
                 var selected = Random.Range(0, selectedWave.creeps.Count);
                 var spawn = GameObject.Instantiate(selectedWave.creeps[selected], spawnPoint.position, Quaternion.identity);
-                Task.Delay((int)selectedWave.spawnDelay * 1000);
+                await Task.Delay((int)selectedWave.spawnDelay * 1000);
             }
 
         }
