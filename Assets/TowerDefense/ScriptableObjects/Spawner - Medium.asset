@@ -12,20 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63acccac56bdbc94aaa370038b1b329b, type: 3}
   m_Name: Spawner - Medium
   m_EditorClassIdentifier: 
+  spawnRate: 0.5
   spawnWaves:
   - name: Group of Goblin
     creeps:
     - {fileID: 1143932575831664798, guid: 47bebefb551dae149adedfe4b0609046, type: 3}
     spawnCount: 3
     spawnRate: 0.185
+    spawnDelay: 1
   - name: Group of Goblins & Mutants!
     creeps:
     - {fileID: 1143932575831664798, guid: 47bebefb551dae149adedfe4b0609046, type: 3}
     - {fileID: 1738896479072505551, guid: 367b73f6400933b429ab19d28e6623f8, type: 3}
     spawnCount: 6
     spawnRate: 0.25
+    spawnDelay: 1
   - name: Only Mutants!!
     creeps:
     - {fileID: 1738896479072505551, guid: 367b73f6400933b429ab19d28e6623f8, type: 3}
     spawnCount: 7
     spawnRate: 0.1
+    spawnDelay: 1

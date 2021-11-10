@@ -16,10 +16,17 @@ namespace TowerDefense.Spawers
     [Serializable]
     public class CreepSpawn
     {
+        [Tooltip("Creep spawn identifier")]
         public string name;
         public List<Creep.Creep> creeps;
+        [Header("Quantity of creeps to spawn")]
+        [Min(1)]
         public int spawnCount;
+        [Header("Probability rate of this spawn to be spawn")]
+        [Min(0.1f)]
         public float spawnRate;
-        public float spawnDelay;
+        [Header("Spawn delay between units")]
+        [Min(0.15f)]
+        public float spawnDelay = 1f;
     }
 }
