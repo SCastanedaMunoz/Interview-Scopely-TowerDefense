@@ -206,7 +206,7 @@ Transform:
   - {fileID: 1765347941}
   - {fileID: 709777461}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &92170015
 MonoBehaviour:
@@ -428,7 +428,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5822169893334859464, guid: cb54cad3f96932d45816a638d4a80c0e, type: 3}
       propertyPath: m_Name
-      value: Spawner
+      value: Spawner - Easy
       objectReference: {fileID: 0}
     - target: {fileID: 5822169893334859464, guid: cb54cad3f96932d45816a638d4a80c0e, type: 3}
       propertyPath: m_IsActive
@@ -436,7 +436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5822169893334859467, guid: cb54cad3f96932d45816a638d4a80c0e, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5822169893334859467, guid: cb54cad3f96932d45816a638d4a80c0e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1132,11 +1132,11 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: e9d8005cc29ed7f43a07b349b217fe66, type: 2}
     - target: {fileID: 5822169893334859464, guid: cb54cad3f96932d45816a638d4a80c0e, type: 3}
       propertyPath: m_Name
-      value: Spawner
+      value: Spawner - Medium
       objectReference: {fileID: 0}
     - target: {fileID: 5822169893334859464, guid: cb54cad3f96932d45816a638d4a80c0e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5822169893334859467, guid: cb54cad3f96932d45816a638d4a80c0e, type: 3}
       propertyPath: m_RootOrder

@@ -8,11 +8,13 @@ namespace TowerDefense.Creep
         /// <summary>
         /// base health parameter for generic creep
         /// </summary>
+        [Min(1)]
         public int health;
 
         /// <summary>
         /// base speed parameter for generic creep
         /// </summary>
+        [Range(1, 15)]
         public float speed;
 
         /// <summary>

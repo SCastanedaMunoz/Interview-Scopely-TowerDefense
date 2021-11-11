@@ -8,8 +8,6 @@ namespace TowerDefense.Spawers
     [CreateAssetMenu(fileName = "Base Spawner", menuName = "TowerDefense/Spawner Data")]
     public class SpawnerData : ScriptableObject
     {
-        public float spawnRate = 0.5f;
-        
         public List<CreepSpawn> spawnWaves;
     }
 

@@ -57,7 +57,9 @@ namespace TowerDefense.Spawers
                 if (selectedWave.creeps.Count > 1)
                     selected = Random.Range(0, selectedWave.creeps.Count);
 
-                var spawn = GameObject.Instantiate(selectedWave.creeps[selected], spawnPoint.position, Quaternion.identity);
+                // todo improve this, make it automatic without having to set rotation for everything
+                var rotation = new Vector3(90, 0, -180);
+                var spawn = Instantiate(selectedWave.creeps[selected], spawnPoint.position, Quaternion.Euler(rotation));
                 yield return new WaitForSeconds(selectedWave.spawnDelay);
             }
 
