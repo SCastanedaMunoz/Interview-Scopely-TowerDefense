@@ -72,7 +72,7 @@ namespace TowerDefense.Creeps
             }
         }
 
-        public void Damage(int amount)
+        public void Damage(float amount)
         {
             // calculate health
             health -= amount;

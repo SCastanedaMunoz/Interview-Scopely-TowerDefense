@@ -1,6 +1,6 @@
-using System;
 using TowerDefense.Input;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace TowerDefense.Turrets
 {
@@ -12,45 +12,49 @@ namespace TowerDefense.Turrets
 
         private Vector3? HitPoint = null;
 
-        private Collider[] _overlap = new Collider[1];
+        private readonly Collider[] _obstacleOverlap = new Collider[1];
+
+        public Turret selectedTurret;
 
         private void Awake()
         {
             _placerCamera = Camera.main;
         }
 
-        private void Start()
-        {
-            InputHandler.TurretPlacer.PlaceTurret.performed += cxt =>
-            {
-                var placerPosition = InputHandler.TurretPlacer.PlacerPosition.ReadValue<Vector2>();
-
-                var ray = _placerCamera.ScreenPointToRay(placerPosition);
-
-                if (Physics.Raycast(ray, out var hit, 100))
-                {
-                    // Draw a ray if hit with something
-                    Debug.DrawRay(ray.origin, ray.direction * hit.distance);
-
-                    if (hit.collider.tag.Equals("Battlefield"))
-                    {
-                        HitPoint = hit.point;
-                        
-                        var i = Physics.OverlapBoxNonAlloc(HitPoint.Value, Vector3.one, _overlap, Quaternion.identity, overlapLayers);
-
-                        if (i > 0) {
-                            Debug.LogError("Not an empty space, can't instantiate");
-                            _overlap[0] = null;
-                            return;
-                        }
-                        
-                        Debug.LogError("Ready to instantiate!");
-                        
-                        // instantiate turret
-                    }
-                }
-            };
+        private void Start() {
+            InputHandler.TurretPlacer.PlaceTurret.performed += OnPlaceTurret;
         }
+
+        private void OnPlaceTurret(InputAction.CallbackContext context)
+        {
+            var placerPosition = InputHandler.TurretPlacer.PlacerPosition.ReadValue<Vector2>();
+
+            var ray = _placerCamera.ScreenPointToRay(placerPosition);
+
+            if (!Physics.Raycast(ray, out var hit, 100)) 
+                return;
+            
+            // Draw a ray if hit with something
+            Debug.DrawRay(ray.origin, ray.direction * hit.distance);
+
+            if (hit.collider.tag.Equals("Battlefield"))
+            {
+                HitPoint = hit.point;
+                        
+                // We are only interested on knowing if there is at least 1 object blocking our placement of turrets :)
+                var numOfObstacles = Physics.OverlapBoxNonAlloc(HitPoint.Value, Vector3.one, _obstacleOverlap, Quaternion.identity, overlapLayers);
+
+                if (numOfObstacles > 0) {
+                    return;
+                }
+                        
+                // create turret at location
+                Turret.Create(selectedTurret, hit.point);
+            }
+        }
+
+
+
         private void OnDrawGizmos()
         {
             if (HitPoint.HasValue)

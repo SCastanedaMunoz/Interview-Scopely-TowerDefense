@@ -16,7 +16,7 @@ namespace TowerDefense
     public class ProjectileData : ScriptableObject
     {
         [Min(1)]
-        public int damage = 5;
+        public float damage = 2.5f;
 
         [Min(0.1f)]
         public float speed = 3f;

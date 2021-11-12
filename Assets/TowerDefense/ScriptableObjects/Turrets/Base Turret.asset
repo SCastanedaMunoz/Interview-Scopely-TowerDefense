@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff2d57154c806b941843ed62186ab86f, type: 3}
   m_Name: Base Turret
   m_EditorClassIdentifier: 
+  shootRate: 0.5
   range: 10
-  rotationRate: 10
+  rotationRate: 90
   projectile: {fileID: 7956683938280180851, guid: f34355650f8b0a045a594bd0cd6964d8, type: 3}

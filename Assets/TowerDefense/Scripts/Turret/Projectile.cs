@@ -31,7 +31,7 @@ namespace TowerDefense.Turrets
         private void Setup(Creep creep) {
             _projectileTransform = transform;
             _creep = creep;
-            _targetPosition = _creep.CreepTransform.position;
+            _targetPosition = _creep.HitPosition;
             var dir = (_targetPosition - _projectileTransform.position).normalized;
             var z = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             if (z < 0)

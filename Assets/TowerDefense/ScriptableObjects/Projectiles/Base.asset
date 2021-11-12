@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77cbbb5e8799e414dbbe236344748c54, type: 3}
   m_Name: Base
   m_EditorClassIdentifier: 
-  damage: 12
-  speed: 10
-  destroyRadius: 0.5
+  damage: 2.5
+  speed: 20
+  destroyRadius: 0.25
   type: 0
