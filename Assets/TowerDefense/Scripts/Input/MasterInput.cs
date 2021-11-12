@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/TowerDefense/Scripts/Input/CameraControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/TowerDefense/Scripts/Input/MasterInput.inputactions'
 
 using System;
 using System.Collections;
@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-public class @CameraControls : IInputActionCollection, IDisposable
+public class @MasterInput : IInputActionCollection, IDisposable
 {
     public InputActionAsset asset { get; }
-    public @CameraControls()
+    public @MasterInput()
     {
         asset = InputActionAsset.FromJson(@"{
-    ""name"": ""CameraControls"",
+    ""name"": ""MasterInput"",
     ""maps"": [
         {
             ""name"": ""Camera"",
@@ -78,6 +78,52 @@ public class @CameraControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""TurretPlacer"",
+            ""id"": ""cb034907-4e65-4163-98f4-e08dab13c577"",
+            ""actions"": [
+                {
+                    ""name"": ""PlaceTurret"",
+                    ""type"": ""Button"",
+                    ""id"": ""4331df4f-c759-43cd-b8dd-fc298dec71ea"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""PlacerPosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""17a3b205-ea68-4dcc-b725-f49e508ba339"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b310c457-997c-4190-ab25-616854e50c76"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlaceTurret"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0caf8c84-3236-4335-997f-6c563f343c04"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlacerPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -87,6 +133,10 @@ public class @CameraControls : IInputActionCollection, IDisposable
         m_Camera_PanMovement = m_Camera.FindAction("PanMovement", throwIfNotFound: true);
         m_Camera_PanEnabled = m_Camera.FindAction("PanEnabled", throwIfNotFound: true);
         m_Camera_Reset = m_Camera.FindAction("Reset", throwIfNotFound: true);
+        // TurretPlacer
+        m_TurretPlacer = asset.FindActionMap("TurretPlacer", throwIfNotFound: true);
+        m_TurretPlacer_PlaceTurret = m_TurretPlacer.FindAction("PlaceTurret", throwIfNotFound: true);
+        m_TurretPlacer_PlacerPosition = m_TurretPlacer.FindAction("PlacerPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,8 +191,8 @@ public class @CameraControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Camera_Reset;
     public struct CameraActions
     {
-        private @CameraControls m_Wrapper;
-        public CameraActions(@CameraControls wrapper) { m_Wrapper = wrapper; }
+        private @MasterInput m_Wrapper;
+        public CameraActions(@MasterInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @PanMovement => m_Wrapper.m_Camera_PanMovement;
         public InputAction @PanEnabled => m_Wrapper.m_Camera_PanEnabled;
         public InputAction @Reset => m_Wrapper.m_Camera_Reset;
@@ -181,10 +231,56 @@ public class @CameraControls : IInputActionCollection, IDisposable
         }
     }
     public CameraActions @Camera => new CameraActions(this);
+
+    // TurretPlacer
+    private readonly InputActionMap m_TurretPlacer;
+    private ITurretPlacerActions m_TurretPlacerActionsCallbackInterface;
+    private readonly InputAction m_TurretPlacer_PlaceTurret;
+    private readonly InputAction m_TurretPlacer_PlacerPosition;
+    public struct TurretPlacerActions
+    {
+        private @MasterInput m_Wrapper;
+        public TurretPlacerActions(@MasterInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @PlaceTurret => m_Wrapper.m_TurretPlacer_PlaceTurret;
+        public InputAction @PlacerPosition => m_Wrapper.m_TurretPlacer_PlacerPosition;
+        public InputActionMap Get() { return m_Wrapper.m_TurretPlacer; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(TurretPlacerActions set) { return set.Get(); }
+        public void SetCallbacks(ITurretPlacerActions instance)
+        {
+            if (m_Wrapper.m_TurretPlacerActionsCallbackInterface != null)
+            {
+                @PlaceTurret.started -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlaceTurret;
+                @PlaceTurret.performed -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlaceTurret;
+                @PlaceTurret.canceled -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlaceTurret;
+                @PlacerPosition.started -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlacerPosition;
+                @PlacerPosition.performed -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlacerPosition;
+                @PlacerPosition.canceled -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlacerPosition;
+            }
+            m_Wrapper.m_TurretPlacerActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @PlaceTurret.started += instance.OnPlaceTurret;
+                @PlaceTurret.performed += instance.OnPlaceTurret;
+                @PlaceTurret.canceled += instance.OnPlaceTurret;
+                @PlacerPosition.started += instance.OnPlacerPosition;
+                @PlacerPosition.performed += instance.OnPlacerPosition;
+                @PlacerPosition.canceled += instance.OnPlacerPosition;
+            }
+        }
+    }
+    public TurretPlacerActions @TurretPlacer => new TurretPlacerActions(this);
     public interface ICameraActions
     {
         void OnPanMovement(InputAction.CallbackContext context);
         void OnPanEnabled(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
+    }
+    public interface ITurretPlacerActions
+    {
+        void OnPlaceTurret(InputAction.CallbackContext context);
+        void OnPlacerPosition(InputAction.CallbackContext context);
     }
 }

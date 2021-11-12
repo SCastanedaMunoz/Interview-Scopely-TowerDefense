@@ -9,13 +9,13 @@ namespace TowerDefense.Creep
         /// base health parameter for generic creep
         /// </summary>
         [Min(1)]
-        public int health;
+        public int health = 20;
 
         /// <summary>
         /// base speed parameter for generic creep
         /// </summary>
         [Range(1, 15)]
-        public float speed;
+        public float speed = 2;
 
         /// <summary>
         /// how likely is this mob from enter frenzy mode 

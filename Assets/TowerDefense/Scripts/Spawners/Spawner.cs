@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml.Schema;
+using TowerDefense.Base;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,7 +24,7 @@ namespace TowerDefense.Spawers
 
         private float TotalRate;
 
-        private void Awake()
+        private void Start()
         {
             spawnerData.spawnWaves.ForEach(x => TotalRate += x.spawnRate);
             StartCoroutine(SelectCreepWave());
@@ -58,8 +59,8 @@ namespace TowerDefense.Spawers
                     selected = Random.Range(0, selectedWave.creeps.Count);
 
                 // todo improve this, make it automatic without having to set rotation for everything
-                var rotation = new Vector3(90, 0, -180);
-                var spawn = Instantiate(selectedWave.creeps[selected], spawnPoint.position, Quaternion.Euler(rotation));
+                var spawn = Instantiate(selectedWave.creeps[selected], spawnPoint.position, Quaternion.identity);
+                spawn.CreepTransform.LookAt(PlayerBase.BaseTransform);
                 yield return new WaitForSeconds(selectedWave.spawnDelay);
             }
 

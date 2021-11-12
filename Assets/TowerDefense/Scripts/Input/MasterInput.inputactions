@@ -1,5 +1,5 @@
 {
-    "name": "CameraControls",
+    "name": "MasterInput",
     "maps": [
         {
             "name": "Camera",
@@ -61,6 +61,52 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "TurretPlacer",
+            "id": "cb034907-4e65-4163-98f4-e08dab13c577",
+            "actions": [
+                {
+                    "name": "PlaceTurret",
+                    "type": "Button",
+                    "id": "4331df4f-c759-43cd-b8dd-fc298dec71ea",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "PlacerPosition",
+                    "type": "PassThrough",
+                    "id": "17a3b205-ea68-4dcc-b725-f49e508ba339",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b310c457-997c-4190-ab25-616854e50c76",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlaceTurret",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0caf8c84-3236-4335-997f-6c563f343c04",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlacerPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
