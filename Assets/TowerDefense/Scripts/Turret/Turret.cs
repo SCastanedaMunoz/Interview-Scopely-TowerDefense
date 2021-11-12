@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TowerDefense.Input;
+using TowerDefense.Creeps;
 using UnityEngine;
-using Random = System.Random;
 
 namespace TowerDefense.Turrets
 {
@@ -20,17 +17,23 @@ namespace TowerDefense.Turrets
             _turretTransform = transform;
         }
 
-
-        // Update is called once per frame
-        private void Update()
+        private void Start()
         {
-            var enemy = Creep.Creep.GetClosestCreep(_turretTransform.position, data.range);
+            StartCoroutine(Shoot());
+        }
+
+        IEnumerator Shoot()
+        {
+            yield return new WaitForSeconds(data.shootRate);
             
-            if (enemy != null) {
+            var closestCreep = Creep.GetClosestCreep(_turretTransform.position, data.range);
+            
+            if (closestCreep != null) {
                 // create projectile
-                
-                Projectile.Create(data.projectile, _shootPosition.position,enemy.CreepTransform.position);
+                Projectile.Create(data.projectile, _shootPosition.position, closestCreep);
             }
+
+            yield return Shoot();
         }
 
         private void OnDrawGizmos() {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TowerDefense.Creeps;
 using UnityEngine;
 
 namespace TowerDefense.Turrets
@@ -9,33 +10,38 @@ namespace TowerDefense.Turrets
     {
         public ProjectileData data;
 
+        private Vector3 _targetPosition = Vector3.zero;
+
         private Transform _projectileTransform;
-        
-        private Vector3 _targetPosition;
 
+        private Creep _creep;
 
-        private void Awake()
-        {
+        private void Update() {
+            var position = _projectileTransform.position;
+            var moveDir = (_targetPosition - position).normalized;
+            position += moveDir * data.speed * Time.deltaTime;
+            _projectileTransform.position = position;
+
+            if (!(Vector3.Distance(_projectileTransform.position, _targetPosition) < data.destroyRadius)) 
+                return;
+            _creep.Damage(data.damage);
+            Destroy(gameObject);
+        }
+
+        private void Setup(Creep creep) {
             _projectileTransform = transform;
+            _creep = creep;
+            _targetPosition = _creep.CreepTransform.position;
+            var dir = (_targetPosition - _projectileTransform.position).normalized;
+            var z = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            if (z < 0)
+                z += 360;
+            _projectileTransform.eulerAngles = new Vector3(0, 0, z);
         }
 
-        private void Update()
-        {
-            var moveDir = (_targetPosition - _projectileTransform.position).normalized;
-            _projectileTransform.position += moveDir * data.speed * Time.deltaTime;
-
-            // if (Vector3.Distance(_projectileTransform.position, _targetPosition) < data.destroyRadius) {
-            //     Debug.Log("Destroying Projectile After Reaching Position");
-            //     Destroy(gameObject);
-            // }
-        }
-        
-        public static void Create(Projectile projectile,  Vector3 spawnPosition, Vector3 targetPosition)
-        {
-            
-            Debug.LogError($"Spawn Position: {spawnPosition}, and Target Position: {targetPosition}");
-            var arrowTransform = Instantiate(projectile, spawnPosition, Quaternion.identity);
-            projectile._targetPosition = targetPosition;
+        public static void Create(Projectile projectile,  Vector3 spawnPosition, Creep creep) {
+            var projectileSpawn = Instantiate(projectile, spawnPosition, Quaternion.identity);
+            projectileSpawn.Setup(creep);
         }
     }
 }

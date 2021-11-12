@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TowerDefense.Creep
+namespace TowerDefense.Creeps
 {
     [CreateAssetMenu(fileName = "Base Creep", menuName = "TowerDefense/Creep")]
     public class CreepData : ScriptableObject

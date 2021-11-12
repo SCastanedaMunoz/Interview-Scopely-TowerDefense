@@ -8,6 +8,8 @@ namespace TowerDefense.Turrets
     [CreateAssetMenu(fileName = "Base Turret", menuName = "TowerDefense/Turrets/Turret")]
     public class TurretData : ScriptableObject
     {
+        public float shootRate = 0.5f;
+        
         [Min(1)] 
         public float range = 1;
 

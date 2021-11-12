@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00416b4b599ee5a4e83215c1dfce376a, type: 3}
   m_Name: Maw
   m_EditorClassIdentifier: 
-  health: 50
+  health: 25
   speed: 2.5
   frenzyModifier: 0.15
