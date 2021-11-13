@@ -16,6 +16,8 @@ namespace TowerDefense.Turrets
 
         public Turret selectedTurret;
 
+        private readonly Vector3 _halfExtends = new Vector3(1f, 1, 1.25f);
+
         private void Awake()
         {
             _placerCamera = Camera.main;
@@ -42,7 +44,7 @@ namespace TowerDefense.Turrets
                 HitPoint = hit.point;
                         
                 // We are only interested on knowing if there is at least 1 object blocking our placement of turrets :)
-                var numOfObstacles = Physics.OverlapBoxNonAlloc(HitPoint.Value, Vector3.one, _obstacleOverlap, Quaternion.identity, overlapLayers);
+                var numOfObstacles = Physics.OverlapBoxNonAlloc(HitPoint.Value, _halfExtends, _obstacleOverlap, Quaternion.identity, overlapLayers);
 
                 if (numOfObstacles > 0) {
                     return;
@@ -60,7 +62,7 @@ namespace TowerDefense.Turrets
             if (HitPoint.HasValue)
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawWireCube(HitPoint.Value, Vector3.one * 2);
+                Gizmos.DrawWireCube(HitPoint.Value, _halfExtends * 2);
             }
         }
     }
