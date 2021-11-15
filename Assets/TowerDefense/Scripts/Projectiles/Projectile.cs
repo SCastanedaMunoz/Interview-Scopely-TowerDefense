@@ -53,7 +53,8 @@ namespace TowerDefense.Projectiles
 
         protected virtual void OnDamage()
         {
-            Creep.Damage(damage);
+            if (Creep != null) 
+                Creep.Damage(damage);
             Destroy(gameObject);
         }
 

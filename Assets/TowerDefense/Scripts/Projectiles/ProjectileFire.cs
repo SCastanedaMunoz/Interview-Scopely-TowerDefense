@@ -14,10 +14,17 @@ namespace TowerDefense.Projectiles {
 
         private IEnumerator ApplyFireDamage()
         {
-            for (var i = 0; i < fireTickSteps; i++)
-            {
-                Creep.Damage(damage);
-                yield return new WaitForSeconds(fireTickDelay);
+            for (var i = 0; i < fireTickSteps; i++) {
+                if (Creep != null)
+                {
+                    Creep.Damage(damage);
+                    yield return new WaitForSeconds(fireTickDelay);
+                }
+                else
+                {
+                    yield break;
+                }
+
             }
             Destroy(gameObject);
         }

@@ -15,13 +15,13 @@ MonoBehaviour:
   allSelections:
   - name: Turret - Base
     turret: {fileID: 4371951191066324781, guid: ef82804cbf3f8904f91c5e30ec7556ff, type: 3}
-    sprite: {fileID: 21300000, guid: bfcbdb31cec987940a1c6bf25da8435d, type: 3}
-    price: 0
+    sprite: {fileID: 21300000, guid: 8df004e75d3b2cd45a6e93d861f5a118, type: 3}
+    price: 5
   - name: Turret - Fire
     turret: {fileID: 4371951191066324781, guid: 5dd9f86541c41b84183389c9098f8422, type: 3}
-    sprite: {fileID: 21300000, guid: bfcbdb31cec987940a1c6bf25da8435d, type: 3}
-    price: 0
+    sprite: {fileID: 21300000, guid: 40e76f44e882ea543a1d794f62cd81bd, type: 3}
+    price: 5
   - name: Turret - Ice
     turret: {fileID: 4371951191066324781, guid: 369bfa205e811d0448c94004db47fe04, type: 3}
-    sprite: {fileID: 21300000, guid: bfcbdb31cec987940a1c6bf25da8435d, type: 3}
-    price: 0
+    sprite: {fileID: 21300000, guid: 6da2959b59fd51343bd10d8f8533e65d, type: 3}
+    price: 80

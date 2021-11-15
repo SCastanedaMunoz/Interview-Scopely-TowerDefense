@@ -17,9 +17,7 @@ namespace TowerDefense.Creeps
         [Range(1, 15)]
         public float speed = 2;
 
-        /// <summary>
-        /// how likely is this mob from enter frenzy mode 
-        /// </summary>
-        public float frenzyModifier;
+        [Min(1)]
+        public float goldReward = 5;
     }
 }

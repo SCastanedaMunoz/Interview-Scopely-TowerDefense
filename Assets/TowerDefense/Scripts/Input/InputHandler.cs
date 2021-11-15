@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense.Input
@@ -18,16 +15,15 @@ namespace TowerDefense.Input
         /// </summary>
         private static MasterInput _masterControls;
 
-        private void Awake() {
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Initialize()
+        {
+            new GameObject("Input Handler").AddComponent<InputHandler>();
             _masterControls = new MasterInput();
-        }
-
-        private void OnEnable() {
-            // enable camera controls input asset
             _masterControls.asset.Enable();
         }
         
-        private void OnDisable() {
+        private void OnDestroy() {
             // disable camera controls input asset
             _masterControls.asset.Disable();
         }

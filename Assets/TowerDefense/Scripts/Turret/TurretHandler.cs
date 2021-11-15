@@ -1,5 +1,7 @@
+using TowerDefense.Currency;
 using TowerDefense.Input;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TowerDefense.Turrets
 {
@@ -11,13 +13,15 @@ namespace TowerDefense.Turrets
 
         public LayerMask overlapLayers;
 
-        public Material _collisionMaterial;
-        
+        public Material collisionMaterial;
+
         private Camera _placerCamera;
 
         private readonly Collider[] _obstacleOverlap = new Collider[1];
 
         private Turret _selectedTurret;
+
+        private float _selectedPrice;
 
         public Color acceptedPlacement;
         public Color deniedPlacement;
@@ -26,7 +30,14 @@ namespace TowerDefense.Turrets
 
         private bool _canPlace;
 
-        private void Awake() {
+        public UnityEvent onTurretPreviewGenerated = new UnityEvent();
+
+        public UnityEvent onTurretPreviewPlaced = new UnityEvent();
+
+        public UnityEvent onTurretPreviewCancelled = new UnityEvent();
+
+        private void Awake()
+        {
             Instance = this;
             _placerCamera = Camera.main;
             GenerateCollisionIndicator();
@@ -38,13 +49,20 @@ namespace TowerDefense.Turrets
             {
                 var placerPosition = InputHandler.TurretPlacer.PlacerPosition.ReadValue<Vector2>();
                 var ray = _placerCamera.ScreenPointToRay(placerPosition);
-                
-                if (!Physics.Raycast(ray, out var hit, 100, raycastPreviewLayers)) 
+
+                if (!Physics.Raycast(ray, out var hit, 100, raycastPreviewLayers))
                     return;
-                
+
                 _selectedTurret.transform.position = hit.point;
-                
-                var numOfObstacles = Physics.OverlapBoxNonAlloc(hit.point, _halfExtends, _obstacleOverlap, Quaternion.identity, overlapLayers);
+
+                if (!CurrencyHandler.Instance.CanGoldPurchase(_selectedPrice)) {
+                    _collisionIndicator.material.color = deniedPlacement;
+                    _canPlace = false;
+                    return;
+                }
+
+                var numOfObstacles = Physics.OverlapBoxNonAlloc(hit.point, _halfExtends, _obstacleOverlap,
+                    Quaternion.identity, overlapLayers);
 
                 if (numOfObstacles > 0)
                 {
@@ -56,42 +74,65 @@ namespace TowerDefense.Turrets
                 _collisionIndicator.material.color = acceptedPlacement;
                 _canPlace = true;
             }
-            
-            else if (_canPlace && _selectedTurret != null && InputHandler.TurretPlacer.PreviewTurret.ReadValue<float>() <= 0)
+
+            else if (_canPlace && _selectedTurret != null &&
+                     InputHandler.TurretPlacer.PreviewTurret.ReadValue<float>() <= 0)
             {
-                _canPlace = false;
-                ResetCollisionIndicator();
-                _selectedTurret.Activate();
-                _selectedTurret = null;
+                if (!CurrencyHandler.Instance.GoldPurchase(_selectedPrice))
+                {
+                    TurretPlacementFailed();
+                    return;
+                }
+
+                TurretPlacementSucceed();
             }
-            
-            else if(!_canPlace && _selectedTurret != null && InputHandler.TurretPlacer.PreviewTurret.ReadValue<float>() <= 0)
+
+            else if (!_canPlace && _selectedTurret != null &&
+                     InputHandler.TurretPlacer.PreviewTurret.ReadValue<float>() <= 0)
             {
-                ResetCollisionIndicator();
-                Destroy(_selectedTurret.gameObject);
+                TurretPlacementFailed();
             }
         }
 
-        public void GeneratePreviewTurret(Turret prefab, Vector3 position) {
+        private void TurretPlacementSucceed()
+        {
+            onTurretPreviewPlaced.Invoke();
+            _canPlace = false;
+            ResetCollisionIndicator();
+            _selectedTurret.Activate();
+            _selectedTurret = null;
+        }
+
+        private void TurretPlacementFailed()
+        {
+            onTurretPreviewCancelled.Invoke();
+            ResetCollisionIndicator();
+            Destroy(_selectedTurret.gameObject);
+        }
+
+        public void GeneratePreviewTurret(Turret prefab, float price, Vector3 position)
+        {
             var ray = _placerCamera.ScreenPointToRay(position);
-                
-            if (!Physics.Raycast(ray, out var hit, 100, raycastPreviewLayers)) 
+
+            if (!Physics.Raycast(ray, out var hit, 100, raycastPreviewLayers))
                 return;
 
-            if (hit.collider.tag.Equals("Battlefield")) {
-                _selectedTurret = Turret.Create(prefab, hit.point);
-                EnableCollisionIndicator();
-            }
+            if (!hit.collider.tag.Equals("Battlefield"))
+                return;
+            _selectedPrice = price;
+            _selectedTurret = Turret.Create(prefab, hit.point);
+            EnableCollisionIndicator();
+            onTurretPreviewGenerated.Invoke();
         }
 
         private MeshRenderer _collisionIndicator;
         private GameObject _collIndGO;
         private Transform _collIndT;
-        
+
         private void GenerateCollisionIndicator()
         {
             _collisionIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube).GetComponent<MeshRenderer>();
-            _collisionIndicator.material = _collisionMaterial;
+            _collisionIndicator.material = collisionMaterial;
             _collisionIndicator.material.color = acceptedPlacement;
             _collIndT = _collisionIndicator.transform;
             _collIndT.localScale = _halfExtends * 2;

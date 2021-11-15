@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TowerDefense.Base;
+using TowerDefense.Currency;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -11,23 +12,25 @@ namespace TowerDefense.Creeps
     [RequireComponent(typeof(NavMeshAgent))]
     public class Creep : MonoBehaviour
     {
-        public static readonly List<Creep> AllCreeps = new List<Creep>();
+        private static readonly List<Creep> AllCreeps = new List<Creep>();
 
-        public Transform CreepTransform => _creepTransform;
+        public bool IsDeath => Health <= 0;
 
-        public Vector3 HitPosition => _creepTransform.position + new Vector3(0, .5f, 0);
+        public float Health { get; private set; }
+        public float Speed { get; private set; }
+        public float GoldReward { get; private set; }
+        
+        /// <summary>
+        /// cached transform of base
+        /// </summary>
+        public Transform CreepTransform { get; private set; }
 
-        public bool IsDeath => health <= 0;
+        public Vector3 HitPosition => CreepTransform.position + new Vector3(0, .5f, 0);
 
         /// <summary>
         /// creep's data
         /// </summary>
         public CreepData data;
-
-        /// <summary>
-        /// cached transform of base
-        /// </summary>
-        private Transform _creepTransform;
 
         /// <summary>
         /// creep's animator
@@ -39,13 +42,7 @@ namespace TowerDefense.Creeps
         /// </summary>
         private NavMeshAgent _creepAgent;
         
-        
-        private Coroutine speedModifierCoroutine;
-
-
-        public float health { get; private set; }
-        public float speed { get; private set; }
-        public float frenzyModifier { get; private set; }
+        private Coroutine _speedModifierCoroutine;
 
         // caching the property index is more efficient than string look up :) 
         private static readonly int HashIsWalking = Animator.StringToHash("isWalking");
@@ -57,20 +54,17 @@ namespace TowerDefense.Creeps
 
         public UnityEvent<float> onHit = new UnityEvent<float>();
 
-        public UnityEvent onFrenzy = new UnityEvent();
-
         public UnityEvent onDeath = new UnityEvent();
 
         private void Awake()
         {
             // let's cache our components
-            _creepTransform = transform;
+            CreepTransform = transform;
             _creepAnimator = GetComponentInChildren<Animator>();
             _creepAgent = GetComponent<NavMeshAgent>();
             AllCreeps.Add(this);
-
-            health = data.health;
-            frenzyModifier = data.frenzyModifier;
+            Health = data.health;
+            GoldReward = data.goldReward;
             SetSpeed(data.speed);
         }
 
@@ -91,14 +85,14 @@ namespace TowerDefense.Creeps
         
         private void SetSpeed(float value)
         {
-            speed = value;
+            Speed = value;
             if (value <= 0)
             {
                 _creepAnimator.SetBool(HashIsWalking, false);
             }
             else
             {
-                _creepAnimator.SetFloat(HasSpeed, speed);
+                _creepAnimator.SetFloat(HasSpeed, Speed);
                 _creepAnimator.SetBool(HashIsWalking, true);
             }
             if (_creepAgent != null)
@@ -116,20 +110,28 @@ namespace TowerDefense.Creeps
         public void ModifySpeed(float newMultiplier, float duration)
         {
             // if we already modify the speed, just reset the duration of the effect :) 
-            if (speedModifierCoroutine != null)
-                StopCoroutine(speedModifierCoroutine);
-            speedModifierCoroutine = StartCoroutine(ModifyAndReturnSpeed(newMultiplier, duration));
+            if (_speedModifierCoroutine != null)
+                StopCoroutine(_speedModifierCoroutine);
+            _speedModifierCoroutine = StartCoroutine(ModifyAndReturnSpeed(newMultiplier, duration));
         }
 
         public void Damage(float amount)
         {
-            health -= amount;
-            onHit.Invoke(health);
+            if (IsDeath)
+                return;
+            
+            Health -= amount;
+            onHit.Invoke(Health);
             
             if (!IsDeath)
                 return;
             onDeath.Invoke();
+            if (_speedModifierCoroutine != null)
+                StopCoroutine(_speedModifierCoroutine);
+            CurrencyHandler.Instance.GoldGain(GoldReward);
             _creepAnimator.SetTrigger(HashDie);
+            AllCreeps.Remove(this);
+            Destroy(gameObject, 2f);
         }
 
         public static Creep GetClosestCreep(Vector3 position, float maxRange)
@@ -141,15 +143,15 @@ namespace TowerDefense.Creeps
                 if (creep.IsDeath)
                     continue;
 
-                if (!(Vector3.Distance(position, creep._creepTransform.position) <= maxRange))
+                if (!(Vector3.Distance(position, creep.CreepTransform.position) <= maxRange))
                     continue;
 
                 if (closestCreep == null)
                     closestCreep = creep;
                 else
                 {
-                    if (Vector3.Distance(position, creep._creepTransform.position) <
-                        Vector3.Distance(position, closestCreep._creepTransform.position))
+                    if (Vector3.Distance(position, creep.CreepTransform.position) <
+                        Vector3.Distance(position, closestCreep.CreepTransform.position))
                     {
                         closestCreep = creep;
                     }

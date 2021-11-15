@@ -12,9 +12,16 @@ namespace TowerDefense.Projectiles
         public float slowDuration = 2f;
 
         protected override void OnDamage() {
-            Creep.ModifySpeed(slowMultiplier, slowDuration);
-            Creep.Damage(damage);
-            Destroy(gameObject, slowDuration);
+            // it is possible our target creep gets killed by another turret, account for that
+            if (Creep != null) {
+                Creep.ModifySpeed(slowMultiplier, slowDuration);
+                Creep.Damage(damage);
+                Destroy(gameObject, slowDuration);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

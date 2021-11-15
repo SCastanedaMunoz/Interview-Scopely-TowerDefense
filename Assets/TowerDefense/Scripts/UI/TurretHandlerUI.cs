@@ -11,20 +11,13 @@ namespace TowerDefense.UI
 
         public TurretSelector turretSelectorPrefab;
 
-        public Transform SelectorsHolder;
+        public Transform selectorsHolder;
         
-        public List<TurretHandlerData.TurretSelection> availableTurrets;
-
-        private void Awake() {
-            availableTurrets = data.allSelections;
-        }
-
         private void Start() {
-            foreach (var t in availableTurrets) {
-                var selector = Instantiate(turretSelectorPrefab, SelectorsHolder);
+            foreach (var t in data.allSelections) {
+                var selector = Instantiate(turretSelectorPrefab, selectorsHolder);
                 selector.Setup(t);
             }
         }
-
     }
 }

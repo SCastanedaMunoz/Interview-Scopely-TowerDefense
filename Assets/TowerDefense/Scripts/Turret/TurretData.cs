@@ -13,6 +13,12 @@ namespace TowerDefense.Turrets
 
         [Min(1)]
         public float rotationRate = 10f;
+
+        public float shootRateUpgradeRate = 0.1f;
+
+        public float rangeUpgradeRate = 5;
+
+        public float rotationRateUpgradeRate = 15;
         
         public Projectile projectile;
     }

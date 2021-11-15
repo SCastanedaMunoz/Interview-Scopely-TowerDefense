@@ -12,7 +12,7 @@ namespace TowerDefense.Creeps {
         private void Start()
         {
             _creep = GetComponentInParent<Creep>();
-            _healthMax = _creep.health;
+            _healthMax = _creep.Health;
             _creep.onHit.AddListener(OnCreepHit);
             _creep.onDeath.AddListener(OnCreepDeath);
         }
