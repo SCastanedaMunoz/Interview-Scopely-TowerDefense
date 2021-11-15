@@ -71,34 +71,23 @@
             "id": "cb034907-4e65-4163-98f4-e08dab13c577",
             "actions": [
                 {
-                    "name": "PlaceTurret",
-                    "type": "Button",
-                    "id": "4331df4f-c759-43cd-b8dd-fc298dec71ea",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "PlacerPosition",
                     "type": "PassThrough",
                     "id": "17a3b205-ea68-4dcc-b725-f49e508ba339",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "PreviewTurret",
+                    "type": "Button",
+                    "id": "a2e42f9f-0133-44de-8a8f-8f6afc119dfb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "b310c457-997c-4190-ab25-616854e50c76",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PlaceTurret",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "0caf8c84-3236-4335-997f-6c563f343c04",
@@ -107,6 +96,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "PlacerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2c39333a-430a-4738-a3b2-ef4129f1122e",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PreviewTurret",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

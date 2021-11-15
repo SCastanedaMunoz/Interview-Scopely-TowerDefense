@@ -84,34 +84,23 @@ public class @MasterInput : IInputActionCollection, IDisposable
             ""id"": ""cb034907-4e65-4163-98f4-e08dab13c577"",
             ""actions"": [
                 {
-                    ""name"": ""PlaceTurret"",
-                    ""type"": ""Button"",
-                    ""id"": ""4331df4f-c759-43cd-b8dd-fc298dec71ea"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""PlacerPosition"",
                     ""type"": ""PassThrough"",
                     ""id"": ""17a3b205-ea68-4dcc-b725-f49e508ba339"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""PreviewTurret"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2e42f9f-0133-44de-8a8f-8f6afc119dfb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""b310c457-997c-4190-ab25-616854e50c76"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""PlaceTurret"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""0caf8c84-3236-4335-997f-6c563f343c04"",
@@ -120,6 +109,17 @@ public class @MasterInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PlacerPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2c39333a-430a-4738-a3b2-ef4129f1122e"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PreviewTurret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -135,8 +135,8 @@ public class @MasterInput : IInputActionCollection, IDisposable
         m_Camera_Reset = m_Camera.FindAction("Reset", throwIfNotFound: true);
         // TurretPlacer
         m_TurretPlacer = asset.FindActionMap("TurretPlacer", throwIfNotFound: true);
-        m_TurretPlacer_PlaceTurret = m_TurretPlacer.FindAction("PlaceTurret", throwIfNotFound: true);
         m_TurretPlacer_PlacerPosition = m_TurretPlacer.FindAction("PlacerPosition", throwIfNotFound: true);
+        m_TurretPlacer_PreviewTurret = m_TurretPlacer.FindAction("PreviewTurret", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -235,14 +235,14 @@ public class @MasterInput : IInputActionCollection, IDisposable
     // TurretPlacer
     private readonly InputActionMap m_TurretPlacer;
     private ITurretPlacerActions m_TurretPlacerActionsCallbackInterface;
-    private readonly InputAction m_TurretPlacer_PlaceTurret;
     private readonly InputAction m_TurretPlacer_PlacerPosition;
+    private readonly InputAction m_TurretPlacer_PreviewTurret;
     public struct TurretPlacerActions
     {
         private @MasterInput m_Wrapper;
         public TurretPlacerActions(@MasterInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @PlaceTurret => m_Wrapper.m_TurretPlacer_PlaceTurret;
         public InputAction @PlacerPosition => m_Wrapper.m_TurretPlacer_PlacerPosition;
+        public InputAction @PreviewTurret => m_Wrapper.m_TurretPlacer_PreviewTurret;
         public InputActionMap Get() { return m_Wrapper.m_TurretPlacer; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -252,22 +252,22 @@ public class @MasterInput : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_TurretPlacerActionsCallbackInterface != null)
             {
-                @PlaceTurret.started -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlaceTurret;
-                @PlaceTurret.performed -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlaceTurret;
-                @PlaceTurret.canceled -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlaceTurret;
                 @PlacerPosition.started -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlacerPosition;
                 @PlacerPosition.performed -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlacerPosition;
                 @PlacerPosition.canceled -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPlacerPosition;
+                @PreviewTurret.started -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPreviewTurret;
+                @PreviewTurret.performed -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPreviewTurret;
+                @PreviewTurret.canceled -= m_Wrapper.m_TurretPlacerActionsCallbackInterface.OnPreviewTurret;
             }
             m_Wrapper.m_TurretPlacerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @PlaceTurret.started += instance.OnPlaceTurret;
-                @PlaceTurret.performed += instance.OnPlaceTurret;
-                @PlaceTurret.canceled += instance.OnPlaceTurret;
                 @PlacerPosition.started += instance.OnPlacerPosition;
                 @PlacerPosition.performed += instance.OnPlacerPosition;
                 @PlacerPosition.canceled += instance.OnPlacerPosition;
+                @PreviewTurret.started += instance.OnPreviewTurret;
+                @PreviewTurret.performed += instance.OnPreviewTurret;
+                @PreviewTurret.canceled += instance.OnPreviewTurret;
             }
         }
     }
@@ -280,7 +280,7 @@ public class @MasterInput : IInputActionCollection, IDisposable
     }
     public interface ITurretPlacerActions
     {
-        void OnPlaceTurret(InputAction.CallbackContext context);
         void OnPlacerPosition(InputAction.CallbackContext context);
+        void OnPreviewTurret(InputAction.CallbackContext context);
     }
 }
