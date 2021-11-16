@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdc04b57f31482f48bef19116821f008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 914c37813baffae4194aa6b9dc3fffa7, type: 2}
+  data: {fileID: 11400000, guid: db3b93094f2753348a05e8ea180a7cec, type: 2}
   shootPosition: {fileID: 8318021248590216379}
   turretBody: {fileID: 8318021249489666604}
 --- !u!208 &76409585

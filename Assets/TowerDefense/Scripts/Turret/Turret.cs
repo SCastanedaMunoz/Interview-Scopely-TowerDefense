@@ -84,6 +84,7 @@ namespace TowerDefense.Turrets
             // set an initial aim point
             if (!_aiming)
                 _aimPoint = _turretTransform.TransformPoint(Vector3.forward * 100f);
+            GameManager.Instance.onGamePause.AddListener(OnGamePause);
         }
 
         public void Activate()
@@ -91,6 +92,11 @@ namespace TowerDefense.Turrets
             _turretObstacle.enabled = true;
             _turretCollider.enabled = true;
             StartCoroutine(ScanForEnemies());
+        }
+
+        private void OnGamePause(bool isPaused)
+        {
+            _aiming = !isPaused;
         }
 
         private void Update()
@@ -124,13 +130,11 @@ namespace TowerDefense.Turrets
             {
                 // there is an issue here that basically we are delaying our turret shot by the scan threshold,
                 // if this threshold is increased a lot, it will delay shoot time significantly
-
                 // how often should we wait to scan for a new closer enemy
                 yield return new WaitForSeconds(CreepScanThreshold);
                 var closestCreep = Creep.GetClosestCreep(_turretTransform.position, Range);
-
-                if (closestCreep != null)
-                {
+                yield return new WaitUntil(() => !GameManager.Instance.IsGamePaused);
+                if (closestCreep != null) {
                     _aiming = true;
                     var position = closestCreep.CreepTransform.position;
                     _aimPoint = position;

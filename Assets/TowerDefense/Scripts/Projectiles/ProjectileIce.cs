@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefense.Projectiles
@@ -16,12 +14,8 @@ namespace TowerDefense.Projectiles
             if (Creep != null) {
                 Creep.ModifySpeed(slowMultiplier, slowDuration);
                 Creep.Damage(damage);
-                Destroy(gameObject, slowDuration);
             }
-            else
-            {
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 }

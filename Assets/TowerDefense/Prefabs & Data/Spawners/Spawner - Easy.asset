@@ -12,29 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63acccac56bdbc94aaa370038b1b329b, type: 3}
   m_Name: Spawner - Easy
   m_EditorClassIdentifier: 
+  timeBetweenWaves: 4
   spawnWaves:
   - name: Single Maw
     creeps:
-    - {fileID: 4629152538474276562, guid: d338cec271680814bb05939a0aa1d8e1, type: 3}
-    spawnCount: 2
-    spawnRate: 1
+    - creep: {fileID: 4629152538474276562, guid: d338cec271680814bb05939a0aa1d8e1, type: 3}
+      amount: 1
+    spawnRate: 2
     spawnDelay: 1
   - name: Group of Maws
     creeps:
-    - {fileID: 4629152538474276562, guid: d338cec271680814bb05939a0aa1d8e1, type: 3}
-    spawnCount: 4
-    spawnRate: 4
+    - creep: {fileID: 4629152538474276562, guid: d338cec271680814bb05939a0aa1d8e1, type: 3}
+      amount: 4
+    spawnRate: 2
     spawnDelay: 1
   - name: Maws & Warroks
     creeps:
-    - {fileID: 4629152538474276562, guid: d338cec271680814bb05939a0aa1d8e1, type: 3}
-    - {fileID: 310026027714019730, guid: 46dcbd59f77ed09419509e89de8cb6ed, type: 3}
-    spawnCount: 3
-    spawnRate: 3
+    - creep: {fileID: 4629152538474276562, guid: d338cec271680814bb05939a0aa1d8e1, type: 3}
+      amount: 2
+    - creep: {fileID: 310026027714019730, guid: 46dcbd59f77ed09419509e89de8cb6ed, type: 3}
+      amount: 3
+    spawnRate: 1.25
     spawnDelay: 1
   - name: Only Warroks!
     creeps:
-    - {fileID: 310026027714019730, guid: 46dcbd59f77ed09419509e89de8cb6ed, type: 3}
-    spawnCount: 10
+    - creep: {fileID: 310026027714019730, guid: 46dcbd59f77ed09419509e89de8cb6ed, type: 3}
+      amount: 3
     spawnRate: 0.5
     spawnDelay: 1

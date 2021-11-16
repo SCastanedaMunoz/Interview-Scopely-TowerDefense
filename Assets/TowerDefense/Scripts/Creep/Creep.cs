@@ -71,16 +71,34 @@ namespace TowerDefense.Creeps
         private void Start()
         {
             // set initial animation states
+            GameManager.Instance.onGameOver.AddListener(OnGameOver);
+            GameManager.Instance.onGamePause.AddListener(PauseCreep);
             _creepAgent.destination = PlayerBase.BaseTransform.position;
+            onSpawn.Invoke();
+        }
+
+        private void OnGameOver(bool isWin)
+        {
+            StopCreep();
+            GameManager.Instance.GameOver(false);
+        }
+
+        private void StopCreep()
+        {
+            _creepAgent.isStopped = true;
+            _creepAnimator.SetBool(HashIsWalking, false);
+        }
+
+        private void PauseCreep(bool isPaused = false) {
+            _creepAgent.isStopped = isPaused;
+            _creepAnimator.enabled = !isPaused;
         }
 
         private void Update()
         {
             if (!IsDeath && !(_creepAgent.remainingDistance < 3))
                 return;
-            _creepAgent.isStopped = true;
-            _creepAnimator.SetBool(HashIsWalking, false);
-            onSpawn.Invoke();
+            StopCreep();
         }
         
         private void SetSpeed(float value)
@@ -126,11 +144,11 @@ namespace TowerDefense.Creeps
             if (!IsDeath)
                 return;
             onDeath.Invoke();
+            _creepAnimator.SetTrigger(HashDie);
+            AllCreeps.Remove(this);
             if (_speedModifierCoroutine != null)
                 StopCoroutine(_speedModifierCoroutine);
             CurrencyHandler.Instance.GoldGain(GoldReward);
-            _creepAnimator.SetTrigger(HashDie);
-            AllCreeps.Remove(this);
             Destroy(gameObject, 2f);
         }
 

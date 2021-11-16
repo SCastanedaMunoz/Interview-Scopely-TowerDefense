@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace TowerDefense.Projectiles {
@@ -15,6 +14,7 @@ namespace TowerDefense.Projectiles {
         private IEnumerator ApplyFireDamage()
         {
             for (var i = 0; i < fireTickSteps; i++) {
+                yield return new WaitUntil(() => !GameManager.Instance.IsGamePaused);
                 if (Creep != null)
                 {
                     Creep.Damage(damage);
@@ -22,6 +22,7 @@ namespace TowerDefense.Projectiles {
                 }
                 else
                 {
+                    Destroy(gameObject);
                     yield break;
                 }
 

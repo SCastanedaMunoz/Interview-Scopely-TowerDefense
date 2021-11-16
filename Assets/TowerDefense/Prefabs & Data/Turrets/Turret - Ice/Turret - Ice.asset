@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Turret - Ice
   m_EditorClassIdentifier: 
   shootRate: 0.5
-  range: 5
+  range: 10
   rotationRate: 90
+  shootRateUpgradeRate: 0.1
+  rangeUpgradeRate: 5
+  rotationRateUpgradeRate: 15
   projectile: {fileID: -4632249306766851857, guid: eccb4e016d57ec54c80531613135f3c7, type: 3}

@@ -1,12 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Schema;
 using TowerDefense.Base;
 using UnityEngine;
-using Random = UnityEngine.Random;
-
 
 namespace TowerDefense.Spawers
 {
@@ -15,55 +9,56 @@ namespace TowerDefense.Spawers
         /// <summary>
         /// 
         /// </summary>
-        public SpawnerData spawnerData;
-        
+        public SpawnerData data;
+
         /// <summary>
         /// 
         /// </summary>
         public Transform spawnPoint;
 
-        private float TotalRate;
+        private float _totalRate;
 
         private void Start()
         {
-            spawnerData.spawnWaves.ForEach(x => TotalRate += x.spawnRate);
+            data.spawnWaves.ForEach(x => _totalRate += x.spawnRate);
             StartCoroutine(SelectCreepWave());
         }
-        
-        private IEnumerator SelectCreepWave() {
 
-            var randomRate = Random.Range(0, TotalRate);
-            var currentRate = 0f;
+        private IEnumerator SelectCreepWave()
+        {
+            while (true)
+            {
+                var randomRate = Random.Range(0, _totalRate);
+                var currentRate = 0f;
 
-            var waves = spawnerData.spawnWaves;
-            CreepSpawn selectedWave = null;
+                var waves = data.spawnWaves;
+                CreepSpawn selectedWave = null;
 
-            foreach (var creepSpawn in waves) {
-                currentRate += creepSpawn.spawnRate;
-                if (!(randomRate <= currentRate))
-                    continue;
-                selectedWave = creepSpawn;
-                break;
+                foreach (var creepSpawn in waves)
+                {
+                    currentRate += creepSpawn.spawnRate;
+                    if (!(randomRate <= currentRate))
+                        continue;
+                    selectedWave = creepSpawn;
+                    break;
+                }
+
+                if (selectedWave == null)
+                    yield break;
+
+                foreach (var creepInstance in selectedWave.creeps)
+                {
+                    for (var i = 0; i < creepInstance.amount; i++)
+                    {
+                        yield return new WaitUntil(() => !GameManager.Instance.IsGamePaused);
+                        var spawn = Instantiate(creepInstance.creep, spawnPoint.position, Quaternion.identity);
+                        spawn.CreepTransform.LookAt(PlayerBase.BaseTransform);
+                        yield return new WaitForSeconds(selectedWave.spawnDelay);
+                    }
+                }
+
+                yield return new WaitForSeconds(data.timeBetweenWaves);
             }
-            
-            if (selectedWave == null)
-                yield break;
-            
-            Debug.Log($"Attempting to Spawn: {selectedWave.name}");
-
-            for (var i = 0; i < selectedWave.spawnCount; i++) {
-                var selected = 0;
-                
-                // todo - account for scenarios with 1 creep type or multiple creep types
-                if (selectedWave.creeps.Count > 1)
-                    selected = Random.Range(0, selectedWave.creeps.Count);
-
-                // todo improve this, make it automatic without having to set rotation for everything
-                var spawn = Instantiate(selectedWave.creeps[selected], spawnPoint.position, Quaternion.identity);
-                spawn.CreepTransform.LookAt(PlayerBase.BaseTransform);
-                yield return new WaitForSeconds(selectedWave.spawnDelay);
-            }
-
         }
     }
 }

@@ -21,6 +21,14 @@ namespace TowerDefense.Projectiles
 
         private bool _reachedDestination;
 
+        private void Start() {
+            GameManager.Instance.onGamePause.AddListener(OnGamePause);
+        }
+
+        private void OnGamePause(bool isPaused) {
+            _reachedDestination = isPaused;
+        }
+
         private void Update()
         {
             if (_reachedDestination)
