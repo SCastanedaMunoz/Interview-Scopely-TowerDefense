@@ -97,7 +97,7 @@ namespace TowerDefense.Creeps
         {
             // setup game events
             GameManager.Instance.onGameOver.AddListener(OnGameOver);
-            GameManager.Instance.onGamePause.AddListener(PauseCreep);
+            GameManager.Instance.onGamePause.AddListener(OnGamePause);
             // setup destination
             _creepAgent.destination = PlayerBase.BaseTransform.position;
         }
@@ -241,7 +241,7 @@ namespace TowerDefense.Creeps
             _creepAnimator.SetBool(HashIsWalking, false);
         }
 
-        private void PauseCreep(bool isPaused = false) {
+        private void OnGamePause(bool isPaused = false) {
             _creepAgent.isStopped = isPaused;
             _creepAnimator.enabled = !isPaused;
         }

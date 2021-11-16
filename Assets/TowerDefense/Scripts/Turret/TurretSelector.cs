@@ -39,6 +39,9 @@ namespace TowerDefense.Turrets
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (GameManager.Instance.IsGameOver)
+                return;
+            
             if (!_pointerDown || _needsRelease)
                 return;
             _needsRelease = true;

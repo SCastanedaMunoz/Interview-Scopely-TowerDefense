@@ -60,8 +60,9 @@ namespace TowerDefense
             onGameOver.Invoke(isWin);
         }
 
-        public void GamePause(bool isPaused)
-        {
+        public void GamePause(bool isPaused) {
+            if(IsGameOver)
+                return;
             IsGamePaused = isPaused;
             onGamePause.Invoke(isPaused);
         }

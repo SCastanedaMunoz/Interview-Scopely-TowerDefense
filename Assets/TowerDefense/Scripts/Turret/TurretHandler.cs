@@ -1,3 +1,4 @@
+using System;
 using TowerDefense.Currency;
 using TowerDefense.Input;
 using UnityEngine;
@@ -83,6 +84,12 @@ namespace TowerDefense.Turrets
             GenerateCollisionIndicator();
         }
 
+        private void Start()
+        {
+            GameManager.Instance.onGameOver.AddListener(OnGameOver);
+            GameManager.Instance.onGamePause.AddListener(OnGamePause);
+        }
+
         private void Update()
         {
             HandleTurretPreview();
@@ -154,7 +161,8 @@ namespace TowerDefense.Turrets
             onTurretPreviewPlaced.Invoke();
             _canPlace = false;
             ResetCollisionIndicator();
-            _selectedTurret.Activate();
+            if (_selectedTurret != null)
+                _selectedTurret.Activate();
             _selectedTurret = null;
         }
 
@@ -165,7 +173,8 @@ namespace TowerDefense.Turrets
         {
             onTurretPreviewCancelled.Invoke();
             ResetCollisionIndicator();
-            Destroy(_selectedTurret.gameObject);
+            if(_selectedTurret != null)
+                Destroy(_selectedTurret.gameObject);
         }
 
         /// <summary>
@@ -187,6 +196,18 @@ namespace TowerDefense.Turrets
             _selectedTurret = Turret.Create(prefab, hit.point);
             EnableCollisionIndicator();
             onTurretPreviewGenerated.Invoke();
+        }
+        
+        private void OnGamePause(bool arg0)
+        {
+            if (_selectedTurret != null)
+                TurretPlacementFailed();
+        }
+
+        private void OnGameOver(bool arg0)
+        {
+            if (_selectedTurret != null)
+                TurretPlacementFailed();
         }
 
         private MeshRenderer _collisionIndicator;
