@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff2d57154c806b941843ed62186ab86f, type: 3}
   m_Name: Turret - Ice
   m_EditorClassIdentifier: 
-  shootRate: 0.5
+  shootRate: 0.4
   range: 10
   rotationRate: 90
-  shootRateUpgradeRate: 0.025
-  rangeUpgradeRate: 2.5
+  shootRateUpgradeRate: 0.035
+  rangeUpgradeRate: 3
   rotationRateUpgradeRate: 15
   projectile: {fileID: -4632249306766851857, guid: eccb4e016d57ec54c80531613135f3c7, type: 3}

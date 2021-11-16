@@ -230,6 +230,8 @@ namespace TowerDefense.Creeps
         private void OnGameOver(bool isWin)
         {
             enabled = false;
+            if (IsDeath)
+                return;
             StopCreep();
             if (!isWin)
                 _creepAnimator.SetTrigger(HashFlex);
