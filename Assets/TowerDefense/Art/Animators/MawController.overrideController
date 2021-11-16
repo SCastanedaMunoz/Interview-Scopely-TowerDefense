@@ -8,4 +8,16 @@ AnimatorOverrideController:
   m_PrefabAsset: {fileID: 0}
   m_Name: MawController
   m_Controller: {fileID: 9100000, guid: 4d65126615e437948b248baad61a0334, type: 2}
-  m_Clips: []
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 71fcd7fd83ff91045a6e8be08fdff8f8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9ced20a80ad886c4a9e7c401853dcc7c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 000d4afcf96ef434dbcd45d7ce6fcb80, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9306a43235707e140abd72fdc7d3638e, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ce57f39a39c004043bc71779f83e209d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ce57f39a39c004043bc71779f83e209d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ae66381fba683db4c92e46634f1df31c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8b765e36d9cae2b43989e2bdff3349c5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 1b4459ba17652ab4da0b59e6e8e474b4, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 07219700468065f448a46d3f8c453e23, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 6acdc0e53d6f0e749932356070ce982b, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bb385f4cb4090af4e85e73dc51a4d13e, type: 2}

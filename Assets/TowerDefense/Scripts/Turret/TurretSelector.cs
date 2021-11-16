@@ -5,6 +5,9 @@ using Selection = TowerDefense.TurretHandlerData.TurretSelection;
 
 namespace TowerDefense.Turrets
 {
+    /// <summary>
+    /// contains turret UI information and drag behavior for spawning
+    /// </summary>
     public class TurretSelector : MonoBehaviour, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
     {
         private Button _selectorButton;

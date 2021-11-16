@@ -7,33 +7,77 @@ using UnityEngine.AI;
 
 namespace TowerDefense.Turrets
 {
+    /// <summary>
+    /// simple turret
+    /// </summary>
     public class Turret : MonoBehaviour
     {
+        /// <summary>
+        /// turret data
+        /// </summary>
         public TurretData data;
 
+        /// <summary>
+        /// where projectiles come from
+        /// </summary>
         public Transform shootPosition;
 
+        /// <summary>
+        /// turret rotational body
+        /// </summary>
         public Transform turretBody;
 
+        /// <summary>
+        /// cached turret transform
+        /// </summary>
         private Transform _turretTransform;
 
+        /// <summary>
+        /// creep scan threshold :)
+        /// </summary>
         private const float CreepScanThreshold = 0.1f;
 
+        /// <summary>
+        /// creep aim threshold. (How accurate we need to be aiming in order to shoot :D)
+        /// </summary>
         private const float AimThreshold = 0.9f;
 
-        public bool Idle => !_aiming;
-
+        /// <summary>
+        /// current aimPoint
+        /// </summary>
         private Vector3 _aimPoint;
 
+        /// <summary>
+        /// turret aim status
+        /// </summary>
         private bool _aiming = false;
-
+        
+        /// <summary>
+        /// let's make creep's avoid turrets
+        /// </summary>
         private NavMeshObstacle _turretObstacle;
 
+        /// <summary>
+        /// used to detect turret placemnt
+        /// </summary>
         private Collider _turretCollider;
 
+        /// <summary>
+        /// how often the turret shoots
+        /// </summary>
         public float ShootRate { get; private set; }
+        
+        /// <summary>
+        /// how fast the turret turns
+        /// </summary>
         public float TurnSpeed { get; private set; }
+        
+        /// <summary>
+        /// turret range
+        /// </summary>
         public float Range { get; private set; }
+
+        private Coroutine _scanForEnemiesCoroutine;
 
         private void Awake()
         {
@@ -41,9 +85,11 @@ namespace TowerDefense.Turrets
             _turretObstacle = GetComponent<NavMeshObstacle>();
             _turretCollider = GetComponent<Collider>();
 
+            // disable collides on startup, for preview purposes
             _turretObstacle.enabled = false;
             _turretCollider.enabled = false;
 
+            // get upgrades
             var shootRateUpgrade = UpgradeHandler.Instance.shootRate;
             var turnRateUpgrade = UpgradeHandler.Instance.turnSpeed;
             var rangeUpgrade = UpgradeHandler.Instance.range;
@@ -54,57 +100,41 @@ namespace TowerDefense.Turrets
             TurnSpeed = data.rotationRate + data.rotationRateUpgradeRate * turnRateUpgrade.TimesUpgraded;
             Range = data.range + data.rangeUpgradeRate * rangeUpgrade.TimesUpgraded;
 
+            // listen for new upgrades
             shootRateUpgrade.onUpgrade.AddListener(OnShootRateUpgraded);
             turnRateUpgrade.onUpgrade.AddListener(OnTurnSpeedUpgraded);
             rangeUpgrade.onUpgrade.AddListener(OnRangeUpgraded);
         }
 
-        private void OnShootRateUpgraded()
-        {
-            // shoot rate upgrades need to be limited
-            if (ShootRate >= 0.1f)
-                // an actual upgrade logic would go here ¯\_(ツ)_/¯
-                ShootRate -= data.shootRateUpgradeRate;
-        }
-
-        private void OnTurnSpeedUpgraded()
-        {
-            // an actual upgrade logic would go here ¯\_(ツ)_/¯
-            TurnSpeed += data.rotationRateUpgradeRate;
-        }
-        
-        private void OnRangeUpgraded()
-        {
-            // an actual upgrade logic would go here ¯\_(ツ)_/¯
-            Range += data.rangeUpgradeRate;
-        }
-        
         private void Start()
         {
             // set an initial aim point
             if (!_aiming)
                 _aimPoint = _turretTransform.TransformPoint(Vector3.forward * 100f);
             GameManager.Instance.onGamePause.AddListener(OnGamePause);
+            GameManager.Instance.onGameOver.AddListener(OnGameOver);
         }
-
-        public void Activate()
-        {
-            _turretObstacle.enabled = true;
-            _turretCollider.enabled = true;
-            StartCoroutine(ScanForEnemies());
-        }
-
-        private void OnGamePause(bool isPaused)
-        {
-            _aiming = !isPaused;
-        }
-
+        
         private void Update()
         {
             if (_aiming)
                 RotateTurret();
         }
 
+        #region TURRET LOGIC
+        /// <summary>
+        /// activate's turret >:D
+        /// </summary>
+        public void Activate()
+        {
+            _turretObstacle.enabled = true;
+            _turretCollider.enabled = true;
+            _scanForEnemiesCoroutine = StartCoroutine(ScanForEnemies());
+        }
+
+        /// <summary>
+        /// handles turret rotation
+        /// </summary>        
         private void RotateTurret()
         {
             if (turretBody == null)
@@ -113,10 +143,14 @@ namespace TowerDefense.Turrets
                 return;
             }
 
+            // get local position
             var localTargetPos = _turretTransform.InverseTransformPoint(_aimPoint);
             localTargetPos.y = 0.0f;
 
+            // where we want to be aiming at
             var rotationGoal = Quaternion.LookRotation(localTargetPos);
+            
+            // actual rotation logic
             var newRotation = Quaternion.RotateTowards(turretBody.localRotation, rotationGoal,
                 TurnSpeed * Time.deltaTime);
 
@@ -132,17 +166,20 @@ namespace TowerDefense.Turrets
                 // if this threshold is increased a lot, it will delay shoot time significantly
                 // how often should we wait to scan for a new closer enemy
                 yield return new WaitForSeconds(CreepScanThreshold);
-                var closestCreep = Creep.GetClosestCreep(_turretTransform.position, Range);
                 yield return new WaitUntil(() => !GameManager.Instance.IsGamePaused);
+                // detect closet creep
+                var closestCreep = Creep.GetClosestCreep(_turretTransform.position, Range);
                 if (closestCreep != null) {
                     _aiming = true;
+                    
+                    // get creep's current postion
                     var position = closestCreep.CreepTransform.position;
                     _aimPoint = position;
 
                     var forward = turretBody.TransformDirection(Vector3.forward);
                     var toOther = (position - turretBody.position).normalized;
 
-                    // assume we are close enough to shoot 
+                    // detect how close we are to shoot
                     if (!(Vector3.Dot(forward, toOther) >= AimThreshold))
                         continue;
 
@@ -160,13 +197,68 @@ namespace TowerDefense.Turrets
             // create projectile
             Projectile.Create(data.projectile, shootPosition.position, creep);
         }
+        #endregion
 
+        #region GAME EVENTS
+        private void OnGamePause(bool isPaused)
+        {
+            _aiming = !isPaused;
+        }
+        
+        private void OnGameOver(bool isWIn)
+        {
+            _aiming = false;
+            if (_scanForEnemiesCoroutine != null)
+                StopCoroutine(_scanForEnemiesCoroutine);
+        }
+        #endregion
+
+        #region UPGRADES
+        /// <summary>
+        /// called when shoot rate is upgraded
+        /// </summary>
+        private void OnShootRateUpgraded()
+        {
+            // shoot rate upgrades need to be limited
+            if (ShootRate >= 0.1f)
+                // an actual upgrade logic would go here ¯\_(ツ)_/¯
+                ShootRate -= data.shootRateUpgradeRate;
+        }
+
+        /// <summary>
+        /// called when turn rate is upgraded
+        /// </summary>
+        private void OnTurnSpeedUpgraded()
+        {
+            // an actual upgrade logic would go here ¯\_(ツ)_/¯
+            TurnSpeed += data.rotationRateUpgradeRate;
+        }
+        
+        /// <summary>
+        /// called when range is upgraded
+        /// </summary>
+        private void OnRangeUpgraded()
+        {
+            // an actual upgrade logic would go here ¯\_(ツ)_/¯
+            Range += data.rangeUpgradeRate;
+        }
+        #endregion
+
+        /// <summary>
+        /// let me see turret range
+        /// </summary>
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, Range);
         }
 
+        /// <summary>
+        /// easy create
+        /// </summary>
+        /// <param name="turret">prefab</param>
+        /// <param name="spawnPosition">spawn position</param>
+        /// <returns>created turret</returns>
         public static Turret Create(Turret turret, Vector3 spawnPosition)
         {
            return Instantiate(turret, spawnPosition, Quaternion.identity);

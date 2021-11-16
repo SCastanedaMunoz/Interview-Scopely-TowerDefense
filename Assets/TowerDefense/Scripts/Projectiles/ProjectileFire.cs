@@ -2,15 +2,42 @@ using System.Collections;
 using UnityEngine;
 
 namespace TowerDefense.Projectiles {
+    
+    /// <summary>
+    /// simple fire projectile
+    /// </summary>
     public class ProjectileFire : Projectile {
-        public float fireTickDelay = 0.5f;
-
-        public int fireTickSteps = 5;
         
-        protected override void OnDamage() {
-            StartCoroutine(ApplyFireDamage());
+        /// <summary>
+        /// how often should fire damage be applied
+        /// </summary>
+        public float fireTickDelay = 0.5f;
+        
+        
+        /// <summary>
+        /// how many times should fire be applied
+        /// </summary>
+        public int fireTickSteps = 5;
+
+        private Coroutine _fireDmgCoroutine;
+
+        /// <inherithdocs />
+        protected override void OnGameOver(bool isWin)
+        {
+            base.OnGameOver(isWin);
+            if (_fireDmgCoroutine != null)
+                StopCoroutine(ApplyFireDamage());
         }
 
+        /// <inherithdocs />
+        protected override void OnDamage() {
+            _fireDmgCoroutine = StartCoroutine(ApplyFireDamage());
+        }
+
+        /// <summary>
+        /// simple fire damage logic
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator ApplyFireDamage()
         {
             for (var i = 0; i < fireTickSteps; i++) {

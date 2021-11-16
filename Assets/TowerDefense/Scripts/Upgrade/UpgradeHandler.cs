@@ -43,7 +43,7 @@ namespace TowerDefense.Upgrades
             if (!CurrencyHandler.Instance.GoldPurchase(upgrade.price)) 
                 return;
             upgrade.onUpgrade.Invoke();
-            upgrade.TimesUpgraded += 1;
+            upgrade.TimesUpgraded = upgrade.TimesUpgraded + 1;
             // todo - upgrades cost should increase every time! but not for now :(
         }
 
@@ -52,7 +52,7 @@ namespace TowerDefense.Upgrades
         /// 
         /// </summary>
         [Serializable]
-        public struct Upgrade
+        public class Upgrade
         {
             public Sprite sprite;
             

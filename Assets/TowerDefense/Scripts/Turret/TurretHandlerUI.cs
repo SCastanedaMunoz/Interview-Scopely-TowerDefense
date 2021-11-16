@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace TowerDefense.UI
 {
+    /// <summary>
+    /// creates a UI object for each turret inside data.
+    /// </summary>
     public class TurretHandlerUI : MonoBehaviour 
     {
         // all scriptable object data could be better referenced using addressable assets :), this works for now  

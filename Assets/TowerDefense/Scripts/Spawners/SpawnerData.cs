@@ -1,19 +1,30 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TowerDefense.Creeps;
 using UnityEngine;
 
 namespace TowerDefense.Spawers
 {
+    /// <summary>
+    /// simple spawner data
+    /// </summary>
     [CreateAssetMenu(fileName = "Base Spawner", menuName = "TowerDefense/Spawner Data")]
     public class SpawnerData : ScriptableObject
     {
+        /// <summary>
+        /// delay between waves
+        /// </summary>
         public float timeBetweenWaves = 4f;
         
+        /// <summary>
+        /// spawner's waves information
+        /// </summary>
         public List<CreepSpawn> spawnWaves;
     }
 
+    /// <summary>
+    /// contains information about a wave
+    /// </summary>
     [Serializable]
     public class CreepSpawn
     {
@@ -29,6 +40,9 @@ namespace TowerDefense.Spawers
         public float spawnDelay = 1f;
     }
 
+    /// <summary>
+    /// utilized to specify creep amount inside waves.
+    /// </summary>
     [Serializable]
     public class CreepInstance
     {

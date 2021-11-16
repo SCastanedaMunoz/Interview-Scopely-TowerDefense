@@ -680,6 +680,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b0f9d5b7d365940907362f95cd5604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGameOver: 0
+  IsGamePaused: 0
   onGameStart:
     m_PersistentCalls:
       m_Calls: []
@@ -716,7 +718,6 @@ GameObject:
   - component: {fileID: 952477973}
   - component: {fileID: 952477972}
   - component: {fileID: 952477976}
-  - component: {fileID: 952477977}
   m_Layer: 8
   m_Name: Player Base
   m_TagString: Untagged
@@ -732,7 +733,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 952477971}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -794,7 +795,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 952477971}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.6, y: 0, z: -0.1}
+  m_LocalPosition: {x: -21, y: 0, z: -12.1}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -812,22 +813,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d544f111fd2b02f4baf3196505779d7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!208 &952477977
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 952477971}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

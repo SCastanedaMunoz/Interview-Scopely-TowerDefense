@@ -15,7 +15,7 @@ MonoBehaviour:
   shootRate: 0.5
   range: 10
   rotationRate: 90
-  shootRateUpgradeRate: 0.1
-  rangeUpgradeRate: 5
+  shootRateUpgradeRate: 0.025
+  rangeUpgradeRate: 2.5
   rotationRateUpgradeRate: 15
   projectile: {fileID: -1074396629081428563, guid: f34355650f8b0a045a594bd0cd6964d8, type: 3}
