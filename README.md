@@ -1,6 +1,6 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-# ***Scopely - Tower Defense****
+# ***Scopely - Tower Defense***
 
 ## **Description**
 Although the title states Tower Defense, this is merely a prototype of some Tower Defense mechanics you might encounter in a game. This is a project I made in a few hours when I interviewed at a position for [Scopely](https://www.scopely.com). Although, I did get an offer for the position I applied, at the time, it did not meet everything I was looking for in a company.
